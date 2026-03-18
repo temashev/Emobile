@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+db.sqlite3
+*.sql
+postgres_data/
+.postgresql/
+media/
+staticfiles/
+
+.vscode/
+.idea/
+
+.env
