@@ -5,11 +5,11 @@ ___
 ## Запуск проекта:
 1. Клонирование репозитория:
 ```
-git clone https://github.com/temashev/EffectiveMobile
-cd EffectiveMobiles
+git clone https://github.com/temashev/Emobile
+cd Emobile
 ```
 2. Настройка окружения:
-- Необходимо создать `.env` файл на основе `.env.test`.
+- Необходимо создать `.env` файл на основе `.env.example`.
 - Заполнить данные для подключения к PostgreSQL.
 3. Установка зависимостей и активация виртуального окружения:
 ```
