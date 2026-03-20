@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+# Выбор для выпадающего списка при выборе прав
 ACTION_CHOICES = [
     ('view', 'Просмотр'),
     ('create', 'Создание'),
@@ -10,23 +11,27 @@ ACTION_CHOICES = [
 
 
 class UserManager(BaseUserManager):
+    """ Менеджер для создания и сохранения пользователя """
     def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_staff', True)
+        """ Создание супер-юзера """
+        extra_fields.setdefault('is_superuser', True)   # Проверка на супер-юзера
+        extra_fields.setdefault('is_staff', True)   # Проверка на наличие статуса "Персонала"
         return self.create_user(email, password, **extra_fields)
 
     def create_user(self, email, password=None, **extra_fields):
-        if not email:
+        """ Создание обычного юзера """
+        if not email:   # Проверка на заполнение обязательного поля Email
             raise ValueError('Нужно обязательно указать Email')
 
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        email = self.normalize_email(email) # Приведение пароля к виду qwert123@mail.ru
+        user = self.model(email=email, **extra_fields)  # Данные пользователя
         user.set_password(password)  # Хэширование пароля
-        user.save(using=self._db)
+        user.save(using=self._db)   # Сохранение данных пользователя в БД по умолчанию
         return user
 
 
 class Permission(models.Model):
+    """ Модель для хранения прав пользователей """
     name = models.CharField(max_length=20, verbose_name='Право')
     action = models.CharField(choices=ACTION_CHOICES, verbose_name='Действие')
     resource = models.CharField(max_length=50, verbose_name='Ресурс')
@@ -40,6 +45,7 @@ class Permission(models.Model):
 
 
 class Role(models.Model):
+    """ Модель для хранения ролей пользователей """
     name = models.CharField(max_length=20, unique=True, verbose_name='Роль')
     description = models.TextField(max_length=250, blank=True, verbose_name='Описание')
     permissions = models.ManyToManyField(Permission, verbose_name='Права')
@@ -53,6 +59,7 @@ class Role(models.Model):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """ Модель для хранения данных пользователей """
     email = models.EmailField(unique=True, verbose_name='Электронная почта')
     fio = models.CharField(max_length=100, verbose_name='ФИО')
     is_active = models.BooleanField(default=True)
@@ -61,10 +68,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_staff = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['fio']
+    USERNAME_FIELD = 'email'    # Переопределение поля username на email
+    REQUIRED_FIELDS = ['fio']   # Переопределение запрашиваемого поля для супер-юзера
 
-    objects = UserManager()
+    objects = UserManager()     # Переопределение дефолтного менеджера на своего
 
     class Meta:
         verbose_name = 'Пользователь'

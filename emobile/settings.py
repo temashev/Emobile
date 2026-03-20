@@ -27,7 +27,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+# Настройка для аутентификации через новую модель
 AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication', # Для работы через админку
+        'rest_framework.authentication.BasicAuthentication',   # Для простых тестов
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated', # Пускать только залогиненных
+    ],
+}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
