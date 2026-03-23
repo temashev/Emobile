@@ -26,7 +26,7 @@ class RoleViewSet(ModelViewSet):
 
 
 class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.filter(is_active=True).all()    # для показа только юзеров с флагом is_active
     serializer_class = UserSerializer
     resource_name = 'user'
     permission_classes = [GlobalPermission]
