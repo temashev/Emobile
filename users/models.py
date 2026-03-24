@@ -64,7 +64,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     fio = models.CharField(max_length=100, verbose_name='ФИО')
     is_active = models.BooleanField(default=True)
 
-    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Роль')
+    # default=None для исключения случаев с пустой ролью, чтобы при запросе не падал сервер
+    role = models.ForeignKey(Role, default=None, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='Роль')
 
     is_staff = models.BooleanField(default=False)
 

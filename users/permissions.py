@@ -15,7 +15,8 @@ class GlobalPermission(permissions.BasePermission):
             return False
 
         # если пользователь Админ - есть доступ ко всему
-        if request.user.role.name == 'Админ':
+        # исправлена ошибка отсутствия роли
+        if request.user.role and request.user.role.name == 'Админ':
             return True
 
         # Словарь с методами для быстрого соотношения Метод - ресурс
@@ -44,7 +45,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Полный доступ для админа
-        if request.user.role.name == 'Админ':
+        # исправлена ошибка отсутствия роли
+        if request.user.role and request.user.role.name == 'Админ':
             return True
 
         return obj == request.user
